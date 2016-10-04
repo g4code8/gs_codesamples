@@ -90,19 +90,9 @@ public class TestCamundaLoader_01 extends CamelTestSupport  {
     	    	//		NOTE: 	These don't include the Camel HTTP4 specific options. 
     	    	//				Just creating "normal" parameters expected by IBM-BPM ReST API
     	    	// ------------------------------
-    			// URIBuilder uRIBuilder = new URIBuilder("http://centos16:9090/rest/bpm/wle/v1/process");
-    	    	// URIBuilder uRIBuilder = new URIBuilder(TestIbmBpm_util_v2.bpmServices+"process");
-    	    	
-    			// URIBuilder uRIBuilder = new URIBuilder("http://centosw02esx:8080/engine-rest/process-definition/key/" + processID + "/start");
     			URIBuilder uRIBuilder = new URIBuilder(bpmServices + "/process-definition/key/" + processID + "/start");
 
-    	    	
-    	    	//uRIBuilder.addParameter("action", "start"); // start a process
-    			//uRIBuilder.addParameter("bpdId", bpdId);	// process identifier 
-    			//uRIBuilder.addParameter("processAppId", processAppId); // process app' identifier
-    			//uRIBuilder.addParameter("params", jsonStringPayload);  // set the payload. IBM-BPM uses "params" for this
     			// ------------------------------
-    	    	
     			// Top-level Camel route - this is where we start
     			from("dataset:input?produceDelay=-1")
     				.setHeader(Exchange.HTTP_METHOD, constant(HttpMethods.POST)) // set to POST method
@@ -117,19 +107,13 @@ public class TestCamundaLoader_01 extends CamelTestSupport  {
     			//	NOTE: this has NO error catching - "continue" is "true" (even with errors)
     			from("seda:input?concurrentConsumers=100") // <<< set concurrent, parallel processors - sort-of like batching
     				// here we pass in our Camel HTTP4 component options. The "foo" route is ignored, but required (a bug?)
-    				.to("http4://foo?authUsername=admin&authPassword=admin&throwExceptionOnFailure=false&maxTotalConnections=200&connectionsPerRoute=100")
-    				//.bean(TestIbmBpm_util_v2.class,"getStartedProcessIdFromResults") // NOTE, method sigs auto-resolved
-    				//	.wireTap("direct:piid") // send the new process instance id (piid) to file
+    				.to("http4://foo?&throwExceptionOnFailure=false&maxTotalConnections=200&connectionsPerRoute=100")
 					.to("direct:setbodynull"); // clear the body so we can match in/out expectations
     			
     			// ---------------------------------
     			
     			// writing records of the started process IDs for later cleanup
-    			//from("direct:piid") // need to serialize these events since we're writing to a file 			
-				//	.to("stream:file?fileName=data/started_process_id.txt");
-    			
     			// ---------------------------------
-    			
     			// setting body to null to satisfy assertion - will figure this out later...
     			from("direct:setbodynull")
 	    			.process(new Processor() {
@@ -146,7 +130,6 @@ public class TestCamundaLoader_01 extends CamelTestSupport  {
     		}
     	};    	
     }
-	
 	
 	
 	@Test
