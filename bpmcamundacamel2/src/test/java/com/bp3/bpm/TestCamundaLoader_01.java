@@ -15,7 +15,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.fasterxml.jackson.databind.JsonNode;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestCamundaLoader_01 extends CamelTestSupport  {
