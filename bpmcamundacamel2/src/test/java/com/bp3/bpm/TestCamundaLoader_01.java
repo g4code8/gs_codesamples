@@ -102,23 +102,20 @@ public class TestCamundaLoader_01 extends CamelTestSupport  {
     				
     			// ---------------------------------
 
-    			// This is where we make the actual ReST calls to IBM-BPM - "seda" is an in-memory queue
+    			// This is where we make the actual ReST calls to BPM - "seda" is an in-memory queue
     			//	NOTE: this has NO error catching - "continue" is "true" (even with errors)
     			from("seda:input?concurrentConsumers=100") // <<< set concurrent, parallel processors - sort-of like batching
     				// here we pass in our Camel HTTP4 component options. The "foo" route is ignored, but required (a bug?)
     				.to("http4://foo?&throwExceptionOnFailure=false&maxTotalConnections=200&connectionsPerRoute=100")
 					.to("direct:setbodynull"); // clear the body so we can match in/out expectations
-    			
-    			// ---------------------------------
-    			
-    			// writing records of the started process IDs for later cleanup
+    		
     			// ---------------------------------
     			// setting body to null to satisfy assertion - will figure this out later...
     			from("direct:setbodynull")
 	    			.process(new Processor() {
 	    				@Override
 	    				public void process(Exchange exchange) throws Exception {
-	    					// set the body to the startProcessPid
+	    					// set the body to null for now - just need to match expected output at this point. 
 	    					exchange.getOut().setBody(null);										
 	    				}				
 	    			})    			
