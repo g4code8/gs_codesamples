@@ -37,8 +37,9 @@ public class TestCamundaLoader_01 extends CamelTestSupport  {
 	// String bpmProcessName = "simple_print_inputs_w_service_task_02";
 	// String processID = "simple_process_started_by_camel_pid";
 	// String processID = "simple_process_example_pid";
-	// String processID = "print_process_variables_pid";
-	String processID = "straight_through_process_pid";
+	String processID = "print_process_variables_pid";
+	
+	//String processID = "straight_through_process_pid";
 
 	
 	String inputFileName = "start_process_variables.json";
