@@ -1,0 +1,25 @@
+{
+	"variables": {
+		"sampleString": {
+			"value": "sampleStringValue",
+			"type": "String"
+		},
+		"sampleInteger": {
+			"value": 42,
+			"type": "Integer"
+		},
+		"sampleDouble": {
+			"value": 42000000.42,
+			"type": "Double"
+		},
+		"sampleBoolean": {
+			"value": true,
+			"type": "Boolean"
+		}
+		,
+		"sampleDate": {
+			"value": "2013-01-23T14:42:45",
+			"type": "Date"
+		}
+	}
+}
