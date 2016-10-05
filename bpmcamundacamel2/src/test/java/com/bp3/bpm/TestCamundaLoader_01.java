@@ -19,9 +19,9 @@ import org.junit.runners.MethodSorters;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestCamundaLoader_01 extends CamelTestSupport  {
 	
-	// example
-	// http://centosw02esx:8080/engine-rest
 	
+	// THESE NEED TO BE SET TO YOUR OWN ENVIRONMENT
+	// -----------------------------------------------------
 	// Base URI
 	static String BASE_URI = "http://centosw02esx"; 
 	// Port
@@ -132,8 +132,8 @@ public class TestCamundaLoader_01 extends CamelTestSupport  {
 	public void A_testDataLoad() throws Exception {
 		
         MockEndpoint expectedOutput = getMockEndpoint("dataset:expectedOutput");
-        //expectedOutput.setResultWaitTime(9000);
-        expectedOutput.setResultWaitTime(90000000);
+        expectedOutput.setResultWaitTime(9000);
+        //expectedOutput.setResultWaitTime(90000000); // This extra wait time is helpful when stepping through debug - or huge tests
         expectedOutput.assertIsSatisfied();		
 	}
 	
