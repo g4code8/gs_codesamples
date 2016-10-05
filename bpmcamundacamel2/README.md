@@ -4,7 +4,7 @@ Process Application [Camunda BPM](http://docs.camunda.org).
 Event Routing [Apache Camel](http://camel.apache.org/)   
 
 
-This project is intended for example only and to help illustrate discussion from my blog [Gary Samuelson] (http://garysamuelson.com/blog)
+This project is intended for example only and to help illustrate discussion from my blog [Gary Samuelson] (http://garysamuelson.com/blog).
 
 
 
