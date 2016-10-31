@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.3.0">
+  <bpmn:collaboration id="Collaboration_13ne8wb">
+    <bpmn:participant id="print_process_variables_id" name="Print Process Variables" processRef="print_process_variables_pid" />
+    <bpmn:participant id="straight_through_process_id" name="Straight Through Process" processRef="straight_through_process_pid" />
+    <bpmn:participant id="straight_through_process_jms_reply_id" name="Straight Through Process JMS Reply" processRef="straight_through_process_jms_reply_pid" />
+    <bpmn:participant id="straight_through_async_process_id" name="Straight Through Async Process" processRef="straight_through_async_process_pid" />
+    <bpmn:participant id="camunda_greeting_id" name="Camunda Greeting" processRef="camunda_greeting_pid" />
+    <bpmn:textAnnotation id="TextAnnotation_1fkrng9">    <bpmn:text>Just a simple test to insure we are talking to the process via the API</bpmn:text>
+</bpmn:textAnnotation>
+    <bpmn:association id="Association_1frw8bl" sourceRef="print_process_variables_id" targetRef="TextAnnotation_1fkrng9" />
+    <bpmn:textAnnotation id="TextAnnotation_0hcy2o9">    <bpmn:text><![CDATA[This process isn't able to return all the process variables added after async tasks]]></bpmn:text>
+</bpmn:textAnnotation>
+    <bpmn:association id="Association_0dnkqkl" sourceRef="straight_through_async_process_id" targetRef="TextAnnotation_0hcy2o9" />
+    <bpmn:textAnnotation id="TextAnnotation_1oif095">    <bpmn:text>This process is capable of return all process variables no matter its async settings.</bpmn:text>
+</bpmn:textAnnotation>
+    <bpmn:association id="Association_1sfwpid" sourceRef="straight_through_process_jms_reply_id" targetRef="TextAnnotation_1oif095" />
+  </bpmn:collaboration>
+  <bpmn:process id="print_process_variables_pid" name="print_process_variables" isExecutable="true">
+    <bpmn:serviceTask id="task_print_process_vars_w_bean_id" name="Print Process Variables" camunda:expression="#{printProcessVarsWBean_a4.printvariables(execution)}">
+      <bpmn:incoming>SequenceFlow_0oo8bke</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_093a2ga</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_0d52nrk" name="end">
+      <bpmn:incoming>SequenceFlow_093a2ga</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="StartEvent_1" name="start">
+      <bpmn:outgoing>SequenceFlow_0oo8bke</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0oo8bke" sourceRef="StartEvent_1" targetRef="task_print_process_vars_w_bean_id" />
+    <bpmn:sequenceFlow id="SequenceFlow_093a2ga" sourceRef="task_print_process_vars_w_bean_id" targetRef="EndEvent_0d52nrk" />
+    <bpmn:textAnnotation id="TextAnnotation_07olp57">    <bpmn:text>Print process variables via bean</bpmn:text>
+</bpmn:textAnnotation>
+    <bpmn:association id="Association_14vg8qy" sourceRef="task_print_process_vars_w_bean_id" targetRef="TextAnnotation_07olp57" />
+  </bpmn:process>
+  <bpmn:process id="straight_through_process_pid" name="straight_through_process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1yv09wd" name="start">
+      <bpmn:outgoing>SequenceFlow_0b3erls</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="task_print_process_vars_w_bean_id2" name="Print Process Variables 2" camunda:expression="#{printProcessVarsWBean_a4.printvariables(execution)}">
+      <bpmn:incoming>SequenceFlow_0b3erls</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_09205rh</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="task_add_additional_variable_id" name="Add Additional Variable" camunda:expression="#{stpProcessDemo.addProcessVariable(execution)}">
+      <bpmn:incoming>SequenceFlow_09205rh</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0b3hdg2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_0i8c4ts" name="end">
+      <bpmn:incoming>SequenceFlow_0b3hdg2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0b3erls" sourceRef="StartEvent_1yv09wd" targetRef="task_print_process_vars_w_bean_id2" />
+    <bpmn:sequenceFlow id="SequenceFlow_09205rh" sourceRef="task_print_process_vars_w_bean_id2" targetRef="task_add_additional_variable_id" />
+    <bpmn:sequenceFlow id="SequenceFlow_0b3hdg2" sourceRef="task_add_additional_variable_id" targetRef="EndEvent_0i8c4ts" />
+    <bpmn:association id="Association_0gg8y6q" sourceRef="task_add_additional_variable_id" targetRef="TextAnnotation_1srnnut" />
+    <bpmn:textAnnotation id="TextAnnotation_1srnnut">    <bpmn:text>As long as we avoid async, we get all the process variables back. But, once we set async then we lose variables set afterwards.</bpmn:text>
+</bpmn:textAnnotation>
+  </bpmn:process>
+  <bpmn:process id="straight_through_process_jms_reply_pid" name="straight_through_process_jms_reply" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_09izs9a" name="start">
+      <bpmn:outgoing>SequenceFlow_1j9qyts</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="task_print_process_vars_w_bean_id3" name="Print Process Variables 3" camunda:asyncAfter="true" camunda:expression="#{printProcessVarsWBean_a4.printvariables(execution)}">
+      <bpmn:incoming>SequenceFlow_1j9qyts</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1re4u50</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="task_add_additional_variable_id2" name="Add Additional Variable 2" camunda:asyncBefore="true" camunda:expression="#{stpProcessDemo.addProcessVariable(execution)}">
+      <bpmn:incoming>SequenceFlow_1re4u50</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_18g9ycw</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_1vcdr0e" name="end">
+      <bpmn:incoming>SequenceFlow_18g9ycw</bpmn:incoming>
+      <bpmn:messageEventDefinition camunda:expression="#{stpProcessDemo.returnProcessVariables2(execution)}" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1j9qyts" sourceRef="StartEvent_09izs9a" targetRef="task_print_process_vars_w_bean_id3" />
+    <bpmn:sequenceFlow id="SequenceFlow_1re4u50" sourceRef="task_print_process_vars_w_bean_id3" targetRef="task_add_additional_variable_id2" />
+    <bpmn:sequenceFlow id="SequenceFlow_18g9ycw" sourceRef="task_add_additional_variable_id2" targetRef="EndEvent_1vcdr0e" />
+    <bpmn:association id="Association_1muwccg" sourceRef="task_print_process_vars_w_bean_id3" targetRef="TextAnnotation_12lnxe4" />
+    <bpmn:association id="Association_09x1h4b" sourceRef="task_add_additional_variable_id2" targetRef="TextAnnotation_03zklr7" />
+    <bpmn:association id="Association_0gtqgc0" sourceRef="EndEvent_1vcdr0e" targetRef="TextAnnotation_0a0hqbo" />
+    <bpmn:textAnnotation id="TextAnnotation_12lnxe4">    <bpmn:text>async continuation after</bpmn:text>
+</bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_03zklr7">    <bpmn:text>async continuation before</bpmn:text>
+</bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_0a0hqbo">    <bpmn:text><![CDATA[All process variables returned in "end-message" event]]></bpmn:text>
+</bpmn:textAnnotation>
+  </bpmn:process>
+  <bpmn:process id="straight_through_async_process_pid" name="straight_through_async_process" isExecutable="true">
+    <bpmn:sequenceFlow id="SequenceFlow_1i7tzb7" sourceRef="StartEvent_17vbgc6" targetRef="task_print_process_vars_w_bean_id4" />
+    <bpmn:sequenceFlow id="SequenceFlow_1dcb5va" sourceRef="task_print_process_vars_w_bean_id4" targetRef="task_add_additional_variable_id4" />
+    <bpmn:endEvent id="EndEvent_12dkkia" name="end">
+      <bpmn:incoming>SequenceFlow_1560078</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1560078" sourceRef="task_add_additional_variable_id4" targetRef="EndEvent_12dkkia" />
+    <bpmn:serviceTask id="task_print_process_vars_w_bean_id4" name="Print Process Variables 4" camunda:expression="#{printProcessVarsWBean_a4.printvariables(execution)}">
+      <bpmn:incoming>SequenceFlow_1i7tzb7</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1dcb5va</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="task_add_additional_variable_id4" name="Add Additional Variable 4" camunda:asyncBefore="true" camunda:expression="#{stpProcessDemo.addProcessVariable(execution)}">
+      <bpmn:incoming>SequenceFlow_1dcb5va</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1560078</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_17vbgc6" name="start">
+      <bpmn:outgoing>SequenceFlow_1i7tzb7</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:textAnnotation id="TextAnnotation_0yh23me">    <bpmn:text><![CDATA[We lose the new, added variable when this task is set "async before"]]></bpmn:text>
+</bpmn:textAnnotation>
+    <bpmn:association id="Association_0obaxvf" sourceRef="task_add_additional_variable_id4" targetRef="TextAnnotation_0yh23me" />
+  </bpmn:process>
+  <bpmn:process id="camunda_greeting_pid" name="camunda_greating" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_0y4wals" name="start">
+      <bpmn:outgoing>SequenceFlow_0d4yk2j</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_1xl91sc">
+      <bpmn:incoming>SequenceFlow_1dy8q33</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Task_1ios7hg" name="Camunda Says Hello" camunda:expression="#{stpProcessDemo.camundaSaysHello(execution)}">
+      <bpmn:incoming>SequenceFlow_0d4yk2j</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1dy8q33</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0d4yk2j" sourceRef="StartEvent_0y4wals" targetRef="Task_1ios7hg" />
+    <bpmn:sequenceFlow id="SequenceFlow_1dy8q33" sourceRef="Task_1ios7hg" targetRef="EndEvent_1xl91sc" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_13ne8wb">
+      <bpmndi:BPMNShape id="Participant_09pp74a_di" bpmnElement="print_process_variables_id">
+        <dc:Bounds x="369" y="-215" width="544" height="246" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="441" y="-117" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="448" y="-81" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0oo8bke_di" bpmnElement="SequenceFlow_0oo8bke">
+        <di:waypoint xsi:type="dc:Point" x="477" y="-99" />
+        <di:waypoint xsi:type="dc:Point" x="577" y="-99" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="527" y="-114" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0d52nrk_di" bpmnElement="EndEvent_0d52nrk">
+        <dc:Bounds x="767" y="-117" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="776" y="-81" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_093a2ga_di" bpmnElement="SequenceFlow_093a2ga">
+        <di:waypoint xsi:type="dc:Point" x="677" y="-99" />
+        <di:waypoint xsi:type="dc:Point" x="767" y="-99" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="722" y="-114" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1fkrng9_di" bpmnElement="TextAnnotation_1fkrng9">
+        <dc:Bounds x="729" y="-300" width="184" height="63" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1frw8bl_di" bpmnElement="Association_1frw8bl">
+        <di:waypoint xsi:type="dc:Point" x="767" y="-215" />
+        <di:waypoint xsi:type="dc:Point" x="790" y="-237" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0xgcgcb_di" bpmnElement="task_print_process_vars_w_bean_id">
+        <dc:Bounds x="577" y="-139" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_07olp57_di" bpmnElement="TextAnnotation_07olp57">
+        <dc:Bounds x="686" y="-185" width="189" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_14vg8qy_di" bpmnElement="Association_14vg8qy">
+        <di:waypoint xsi:type="dc:Point" x="677" y="-121" />
+        <di:waypoint xsi:type="dc:Point" x="740" y="-149" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_1qb1v22_di" bpmnElement="straight_through_process_id">
+        <dc:Bounds x="369" y="470" width="635" height="267" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1yv09wd_di" bpmnElement="StartEvent_1yv09wd">
+        <dc:Bounds x="453" y="601" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="460" y="637" width="22" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0b3erls_di" bpmnElement="SequenceFlow_0b3erls">
+        <di:waypoint xsi:type="dc:Point" x="489" y="619" />
+        <di:waypoint xsi:type="dc:Point" x="523" y="619" />
+        <di:waypoint xsi:type="dc:Point" x="523" y="619" />
+        <di:waypoint xsi:type="dc:Point" x="555" y="619" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="538" y="619" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_09205rh_di" bpmnElement="SequenceFlow_09205rh">
+        <di:waypoint xsi:type="dc:Point" x="655" y="619" />
+        <di:waypoint xsi:type="dc:Point" x="712" y="619" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="684" y="604" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0b3hdg2_di" bpmnElement="SequenceFlow_0b3hdg2">
+        <di:waypoint xsi:type="dc:Point" x="812" y="619" />
+        <di:waypoint xsi:type="dc:Point" x="875" y="619" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="844" y="604" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0kknq70_di" bpmnElement="task_print_process_vars_w_bean_id2">
+        <dc:Bounds x="555" y="579" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0sxcaoq_di" bpmnElement="task_add_additional_variable_id">
+        <dc:Bounds x="712" y="579" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_174365g_di" bpmnElement="EndEvent_0i8c4ts">
+        <dc:Bounds x="875" y="601" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="884" y="637" width="18" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_108l6tb_di" bpmnElement="straight_through_process_jms_reply_id">
+        <dc:Bounds x="369" y="831" width="634" height="251" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_09izs9a_di" bpmnElement="StartEvent_09izs9a">
+        <dc:Bounds x="453" y="938" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="460" y="974" width="22" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1j9qyts_di" bpmnElement="SequenceFlow_1j9qyts">
+        <di:waypoint xsi:type="dc:Point" x="489" y="956" />
+        <di:waypoint xsi:type="dc:Point" x="546" y="956" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="518" y="941" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1re4u50_di" bpmnElement="SequenceFlow_1re4u50">
+        <di:waypoint xsi:type="dc:Point" x="646" y="956" />
+        <di:waypoint xsi:type="dc:Point" x="715" y="956" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="681" y="941" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_18g9ycw_di" bpmnElement="SequenceFlow_18g9ycw">
+        <di:waypoint xsi:type="dc:Point" x="815" y="956" />
+        <di:waypoint xsi:type="dc:Point" x="876" y="956" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="846" y="941" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0hbdaba_di" bpmnElement="task_print_process_vars_w_bean_id3">
+        <dc:Bounds x="546" y="916" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0sudsw8_di" bpmnElement="task_add_additional_variable_id2">
+        <dc:Bounds x="715" y="916" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0gtnpda_di" bpmnElement="EndEvent_1vcdr0e">
+        <dc:Bounds x="876" y="938" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="885" y="974" width="18" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1srnnut_di" bpmnElement="TextAnnotation_1srnnut">
+        <dc:Bounds x="709" y="487" width="214" height="69" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0gg8y6q_di" bpmnElement="Association_0gg8y6q">
+        <di:waypoint xsi:type="dc:Point" x="759" y="579" />
+        <di:waypoint xsi:type="dc:Point" x="782" y="556" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_1om3qcl_di" bpmnElement="straight_through_async_process_id">
+        <dc:Bounds x="1068" y="470" width="617" height="273" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1i7tzb7_di" bpmnElement="SequenceFlow_1i7tzb7">
+        <di:waypoint xsi:type="dc:Point" x="1180" y="608" />
+        <di:waypoint xsi:type="dc:Point" x="1240" y="608" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1210" y="593" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1dcb5va_di" bpmnElement="SequenceFlow_1dcb5va">
+        <di:waypoint xsi:type="dc:Point" x="1340" y="608" />
+        <di:waypoint xsi:type="dc:Point" x="1400" y="608" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1370" y="593" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_12dkkia_di" bpmnElement="EndEvent_12dkkia">
+        <dc:Bounds x="1558" y="590" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1567" y="626" width="18" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1560078_di" bpmnElement="SequenceFlow_1560078">
+        <di:waypoint xsi:type="dc:Point" x="1500" y="608" />
+        <di:waypoint xsi:type="dc:Point" x="1558" y="608" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1529" y="593" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1vxf1ex_di" bpmnElement="task_print_process_vars_w_bean_id4">
+        <dc:Bounds x="1240" y="568" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0qeqx1i_di" bpmnElement="task_add_additional_variable_id4">
+        <dc:Bounds x="1400" y="568" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0yh23me_di" bpmnElement="TextAnnotation_0yh23me">
+        <dc:Bounds x="1443" y="492" width="172" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0obaxvf_di" bpmnElement="Association_0obaxvf">
+        <di:waypoint xsi:type="dc:Point" x="1485" y="568" />
+        <di:waypoint xsi:type="dc:Point" x="1507" y="542" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0hcy2o9_di" bpmnElement="TextAnnotation_0hcy2o9">
+        <dc:Bounds x="1484" y="373" width="196" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0dnkqkl_di" bpmnElement="Association_0dnkqkl">
+        <di:waypoint xsi:type="dc:Point" x="1513" y="470" />
+        <di:waypoint xsi:type="dc:Point" x="1555" y="427" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1oif095_di" bpmnElement="TextAnnotation_1oif095">
+        <dc:Bounds x="784" y="762" width="215" height="55" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1sfwpid_di" bpmnElement="Association_1sfwpid">
+        <di:waypoint xsi:type="dc:Point" x="841" y="831" />
+        <di:waypoint xsi:type="dc:Point" x="859" y="817" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_12lnxe4_di" bpmnElement="TextAnnotation_12lnxe4">
+        <dc:Bounds x="483" y="860" width="170" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1muwccg_di" bpmnElement="Association_1muwccg">
+        <di:waypoint xsi:type="dc:Point" x="583" y="916" />
+        <di:waypoint xsi:type="dc:Point" x="574" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_03zklr7_di" bpmnElement="TextAnnotation_03zklr7">
+        <dc:Bounds x="679" y="860" width="172" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_09x1h4b_di" bpmnElement="Association_09x1h4b">
+        <di:waypoint xsi:type="dc:Point" x="765" y="916" />
+        <di:waypoint xsi:type="dc:Point" x="765" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0a0hqbo_di" bpmnElement="TextAnnotation_0a0hqbo">
+        <dc:Bounds x="858" y="845" width="127" height="55" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0gtqgc0_di" bpmnElement="Association_0gtqgc0">
+        <di:waypoint xsi:type="dc:Point" x="900" y="940" />
+        <di:waypoint xsi:type="dc:Point" x="913" y="900" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_1jpcw62_di" bpmnElement="StartEvent_17vbgc6">
+        <dc:Bounds x="1144" y="590" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1151" y="626" width="22" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_0hpnpev_di" bpmnElement="camunda_greeting_id">
+        <dc:Bounds x="369" y="92" width="447" height="198" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0y4wals_di" bpmnElement="StartEvent_0y4wals">
+        <dc:Bounds x="438" y="174" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="445" y="210" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0d4yk2j_di" bpmnElement="SequenceFlow_0d4yk2j">
+        <di:waypoint xsi:type="dc:Point" x="474" y="192" />
+        <di:waypoint xsi:type="dc:Point" x="547" y="192" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="511" y="177" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0tbt5pn_di" bpmnElement="Task_1ios7hg">
+        <dc:Bounds x="547" y="152" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1xl91sc_di" bpmnElement="EndEvent_1xl91sc">
+        <dc:Bounds x="720" y="174" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="738" y="210" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1dy8q33_di" bpmnElement="SequenceFlow_1dy8q33">
+        <di:waypoint xsi:type="dc:Point" x="647" y="192" />
+        <di:waypoint xsi:type="dc:Point" x="720" y="192" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="684" y="177" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
