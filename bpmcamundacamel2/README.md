@@ -6,7 +6,7 @@ Event Routing [Apache Camel](http://camel.apache.org/)
 
 This project is intended for example only and to help illustrate discussion from my blog [Gary Samuelson] (http://garysamuelson.com/blog).
 
-
+NOTE: This project contains extra content - included with Camunda's archetype. I left most-everything intact to support a clean build and deployment into a Camunda shared BPM-engine configuration. 
 
 ## License
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
