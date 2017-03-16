@@ -1,4 +1,4 @@
-package com.bp3.camel;
+package com.stp.camel;
 
 import javax.annotation.Resource;
 import javax.ejb.Startup;
