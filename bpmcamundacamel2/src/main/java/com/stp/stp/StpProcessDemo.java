@@ -1,4 +1,4 @@
-package com.bp3.stp;
+package com.stp.stp;
 
 import java.util.HashMap;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package com.bp3.camel;
+package com.stp.camel;
 
 import java.util.HashMap;
 import java.util.Map;
