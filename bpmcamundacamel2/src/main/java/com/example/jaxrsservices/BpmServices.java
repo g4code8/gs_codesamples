@@ -1,4 +1,4 @@
-package com.stp.jaxrsservices;
+package com.example.jaxrsservices;
 
 import java.util.logging.Logger;
 
