@@ -1,4 +1,4 @@
-package com.stp.util;
+package com.example.util;
 
 import java.util.Iterator;
 import java.util.Map;

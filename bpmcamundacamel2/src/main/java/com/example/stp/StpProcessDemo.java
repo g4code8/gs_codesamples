@@ -1,4 +1,4 @@
-package com.stp.stp;
+package com.example.stp;
 
 import java.util.HashMap;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package com.stp.jaxrsapplication;
+package com.example.jaxrsapplication;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
